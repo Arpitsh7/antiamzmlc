@@ -1,0 +1,10 @@
+# Exclude student dataset resource
+6ab10eb3b23ba_student_resource/
+
+# Exclude generated cache, logs, and large binaries
+cache/
+logs/
+__pycache__/
+*.pyc
+*.parquet
+*.pkl

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Challenge 2026 - Entity Resolution EDA Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .card .title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        .card .val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 0.75rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-s1 { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+        .badge-s2 { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+        .badge-s3 { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .badge-us { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ML Challenge 2026: Business Entity Resolution EDA</h1>
+            <p>Exploratory Data Analysis Report for Train & Test Datasets (Source 1, Source 2, Source 3)</p>
+        </div>
+
+        <div class="grid-cards">
+            <div class="card">
+                <div class="title">Train Source 1 Entities</div>
+                <div class="val">2,206,821</div>
+            </div>
+            <div class="card">
+                <div class="title">Train Ground Truth Pairs</div>
+                <div class="val">7,638,365</div>
+            </div>
+            <div class="card">
+                <div class="title">Singleton Entities (0 Matches)</div>
+                <div class="val">123,247 (5.58%)</div>
+            </div>
+            <div class="card">
+                <div class="title">Test Source 1 Entities</div>
+                <div class="val">1,732,544</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Dataset Files & Volume Overview</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Dataset Split</th>
+                        <th>File Size (MB)</th>
+                        <th>Total Rows</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>train_s1</code></td><td>Train</td><td>200.34 MB</td><td>2,206,821</td></tr><tr><td><code>train_s2</code></td><td>Train</td><td>466.63 MB</td><td>5,034,616</td></tr><tr><td><code>train_s3</code></td><td>Train</td><td>480.37 MB</td><td>5,285,603</td></tr><tr><td><code>train_gt</code></td><td>Train</td><td>121.13 MB</td><td>2,206,821</td></tr><tr><td><code>test_s1</code></td><td>Test</td><td>166.91 MB</td><td>1,732,544</td></tr><tr><td><code>test_s2</code></td><td>Test</td><td>485.86 MB</td><td>4,887,273</td></tr><tr><td><code>test_s3</code></td><td>Test</td><td>482.56 MB</td><td>5,082,316</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Ground Truth Match Distribution (Train S1)</h2>
+            <p>Distribution of matches per Source 1 reference entity in the training dataset:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matches per Entity</th>
+                        <th>Count of S1 Entities</th>
+                        <th>Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>0 match(es)</b> (Singleton)</td><td>123,247</td><td>5.58%</td></tr><tr><td><b>1 match(es)</b> </td><td>119,157</td><td>5.4%</td></tr><tr><td><b>2 match(es)</b> </td><td>375,212</td><td>17.0%</td></tr><tr><td><b>3 match(es)</b> </td><td>530,841</td><td>24.05%</td></tr><tr><td><b>4 match(es)</b> </td><td>484,115</td><td>21.94%</td></tr><tr><td><b>5 match(es)</b> </td><td>321,957</td><td>14.59%</td></tr><tr><td><b>6 match(es)</b> </td><td>164,868</td><td>7.47%</td></tr><tr><td><b>7 match(es)</b> </td><td>63,968</td><td>2.9%</td></tr><tr><td><b>8 match(es)</b> </td><td>18,680</td><td>0.85%</td></tr><tr><td><b>9 match(es)</b> </td><td>4,205</td><td>0.19%</td></tr><tr><td><b>10 match(es)</b> </td><td>534</td><td>0.02%</td></tr><tr><td><b>11 match(es)</b> </td><td>37</td><td>0.0%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Sample Ground Truth Matches</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S1 Entity ID</th>
+                        <th>S1 Business Name & Address</th>
+                        <th>Matched Target ID</th>
+                        <th>Target Business Name & Address</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class='badge badge-s1'>S1-971399383</span></td><td><b>Delta Telecommunication Inc</b><br/><small>9914 Pierpont Avenue, Cleveland, OH</small></td><td><span class='badge badge-s2'>S2-49942811</span></td><td><b>Delta Tetlecommunication Inc</b><br/><small>914 PIERPONT AVE, CLEVELAND, OH</small></td><td><span class='badge badge-us'>US</span></td></tr><tr><td><span class='badge badge-s1'>S1-886405942</span></td><td><b>Lee and Lawson LLC</b><br/><small>1702 Pine Avenue, City Of Menomonie, WI</small></td><td><span class='badge badge-s2'>S2-138046867</span></td><td><b>Lee and Lawson</b><br/><small>1702 Pine Avenue, CITY OF MENOMONIE, WI</small></td><td><span class='badge badge-us'>US</span></td></tr><tr><td><span class='badge badge-s1'>S1-160517054</span></td><td><b>Foundation Excel Agency Private Limited</b><br/><small>E-1, Bharat Nagar, 104/1/1 Erandwane, Pune, Maharashtra</small></td><td><span class='badge badge-s2'>S2-508602797</span></td><td><b>FOUNDATION EXCEL AGENCY PRIVATE  LIMITED</b><br/><small>HN 753 E-1, BHARAT NAGAR, 104/1/1 ERANDWANE, Maharashtra</small></td><td><span class='badge badge-us'>India</span></td></tr><tr><td><span class='badge badge-s1'>S1-735419880</span></td><td><b>Eve's Highland Associates</b><br/><small>599 Pease Hill Road, Horicon, NY</small></td><td><span class='badge badge-s2'>S2-69394310</span></td><td><b>heassociates.com</b><br/><small>599 PEASE HILL ROAD, HORICON, NY</small></td><td><span class='badge badge-us'>US</span></td></tr><tr><td><span class='badge badge-s1'>S1-640548212</span></td><td><b>Asset Building Coalition P.C.</b><br/><small>8219 17th Street, Lake Stevens, WA</small></td><td><span class='badge badge-s2'>S2-868087865</span></td><td><b>ASSET BUILDING COALITION LLC</b><br/><small>8219 17RD STREET, LAKE STEVENS, WA</small></td><td><span class='badge badge-us'>US</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
